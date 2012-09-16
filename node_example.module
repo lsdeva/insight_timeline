@@ -1,0 +1,89 @@
+
+<?php
+/**
+ *  * @file
+ * Module file for Node Example module.
+ * 
+ * This module is developed as a part of Google Summerof Code'12 project.
+ * Author: Lali Sudaththa Devamanthri 
+ * Mentor: María Leandro, Peter Borsa
+ * 
+ * This module is still is development stage. 
+ * 
+ * 
+ * To use this module, OG module and Event contents must be integrate 
+ */
+
+
+/**
+ * Implements hook_menu().
+ * providing a default pages to illustrate the user nodes
+ * 
+ */
+function node_example_menu() {
+  $items['examples/node_example'] = array(
+    'page callback' => 'node_example_page',
+    'access arguments' => array('access content'),
+    'title' => 'Group Nodes Test',
+  );
+  
+  $items['examples/timeline'] = array(
+    'page callback' => 'timeline_page',
+    'access arguments' => array('access content'),
+    'title' => 'Timeline ',
+  );
+  return $items;
+}
+
+/**
+ * function for filter user nodes from tables
+ * @return array of user event nodes
+ */
+function node_example_page() {
+  //  building a renderable array that will be our page.
+  // For now we just declare the array.
+  $renderable_array = array();
+  
+  /* 
+   * get user subscribes group list ID
+   */
+  global $user;
+  $sql1 = 'SELECT gid FROM {og_membership} ogm WHERE ogm.etid = :log';
+  $group_result = db_query($sql1,
+    array(
+      ':log' => $user->uid,
+    )
+  );
+  
+    $renderable_array['explanation'] = array(
+    '#markup' => t("Node created for registered groups by you, will show here"),
+    );
+  
+  // get the group owned nodes ID
+    foreach ($group_result as $groupID){
+      $sql2 = 'SELECT etid FROM {og_membership} ogm WHERE ogm.gid = :group AND entity_type = :type';
+      $events_group = db_query($sql2,
+        array(
+          ':type' => 'node',
+          ':group' => $groupID->gid,
+        )
+      );
+      
+      //get the nodes
+      foreach ($events_group as $row) {
+        $node = node_load($row->etid);
+        $renderable_array['node_list'][]= node_view($node, 'example_node_list');
+      }
+    }
+  //return json_encode($renderable_array);
+    return $renderable_array;
+}
+
+/**
+ * Function for integarate TimelineJS library 
+ * this part still in development
+ * 
+ */
+function timeline_page() {
+   
+}

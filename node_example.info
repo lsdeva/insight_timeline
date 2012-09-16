@@ -1,0 +1,12 @@
+name = Node example
+description = Get user event nodes and show in Timeline .
+package = Example modules
+core = 7.x
+dependencies[] = image
+files[] = node_example.test
+scripts[] = codejava.js
+
+version = "7.x-1.x-dev"
+core = "7.x"
+
+
