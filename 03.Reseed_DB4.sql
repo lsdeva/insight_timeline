@@ -1,0 +1,2 @@
+DBCC CHECKIDENT('[usr].[users]', RESEED, 30000001)
+DBCC CHECKIDENT('[usr].[persons]', RESEED, 30000001)
